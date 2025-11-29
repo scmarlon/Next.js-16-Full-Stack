@@ -8,7 +8,6 @@ const Page = async () => {
   
   const response = await fetch(`${BASE_URL}/api/events`);
   const { events } = await response.json();
-  console.log("Traigo a events",events);
 
 
 
