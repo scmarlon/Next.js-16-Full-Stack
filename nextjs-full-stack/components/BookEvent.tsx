@@ -1,38 +1,48 @@
 'use client';
-import { useState } from "react";
 
-const BookEvent = () => {
+import {useState} from "react";
+import {createBooking} from "@/lib/actions/booking.actions";
+import posthog from "posthog-js";
+
+const BookEvent = ({ eventId, slug }: { eventId: string, slug: string;}) => {
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setTimeout(() => {
+
+        const { success } = await createBooking({ eventId, slug, email });
+
+        if(success) {
             setSubmitted(true);
-        }, 1000); 
-    };
+            posthog.capture('event_booked', { eventId, slug, email })
+        } else {
+            console.log('Booking creation failed')
+            posthog.captureException('Booking creation failed')
+        }
+    }
 
-  return (
-    <div id="book-event">
-        {submitted ? (
-            <p className="success-message">Thank you for booking! A confirmation email has been sent to {email}.</p>
-        ) : (
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email Address</label>
-                    <input type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    id="email"
-                    placeholder="Enter your email address">
-                    </input>
-                </div>
+    return (
+        <div id="book-event">
+            {submitted ? (
+                <p className="text-sm">Thank you for signing up!</p>
+            ): (
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email">Email Address</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            id="email"
+                            placeholder="Enter your email address"
+                        />
+                    </div>
 
-                <button type="submit" className="button-submit">Submit</button>
-            </form>
-        )}
-    </div>
-  )
+                    <button type="submit" className="button-submit">Submit</button>
+                </form>
+            )}
+        </div>
+    )
 }
-
 export default BookEvent
