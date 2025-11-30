@@ -1,6 +1,5 @@
 import ExploreBtn from "@/components/ExploreBtn"
 import EventCard from "@/components/EventCard"
-import events from "@/lib/constants"
 import {IEvent} from "@/database";
 import { cacheLife } from "next/cache";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -12,12 +11,9 @@ const Page = async () => {
   const response = await fetch(`${BASE_URL}/api/events`);
   const { events } = await response.json();
 
-
-
   return (
     <section>
       <h1 className="text-center">The Hub For Every Dev <br/> Even You Cant´t Miss</h1>
-      <p className="text-center mt-5">Hackathons, Meetups and Conferences. All in One Place!</p>
       <p className="text-center mt-5">Hackathons, Meetups and Conferences. All in One Place!</p>
       <ExploreBtn/>
 
