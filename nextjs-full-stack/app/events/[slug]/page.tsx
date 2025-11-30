@@ -45,7 +45,7 @@ const EventDetailsPage = async ({ params }: { params: Promise<{ slug: string }>}
     cacheLife('hours')
     const {slug} = await params;
     let event;
-    console.log("aqui tiene event:", event);
+
     try {
         const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
             next: { revalidate: 60}
@@ -58,7 +58,6 @@ const EventDetailsPage = async ({ params }: { params: Promise<{ slug: string }>}
 
         const response = await request.json();
         event = response;
-        console.log("event actualizado..", event.data.title, "and: ", event.slug);
 
         if (!event) {
             return notFound();
